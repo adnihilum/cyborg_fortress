@@ -1,3 +1,5 @@
-object Main extends App {
-  println("hello, world")
+import gui.MainWindow
+
+object Main extends MainWindow {
+
 }
