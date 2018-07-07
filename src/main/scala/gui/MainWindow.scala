@@ -1,6 +1,5 @@
 package gui
-import java.awt.Rectangle
-import java.awt.Color
+import java.awt.{Color, Dimension, Rectangle}
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import java.io.File
@@ -28,7 +27,9 @@ class TileSet(path: String, charWidth: Int, charHeight: Int) {
   def drawCharToBuff(buffer: Graphics2D, char: Char, charX: Int, charY: Int): Unit = {
     val (x, y) = convertCoords(charX, charY)
     val charImage = charToImage(char)
-    buffer.drawRenderedImage(charImage, AffineTransform.getTranslateInstance(x, y))
+    val transform = buffer.getTransform
+    transform.translate(x, y)
+    buffer.drawRenderedImage(charImage, transform)
   }
 }
 
@@ -51,7 +52,7 @@ object ConvertableToCharOps {
   }
 
   implicit val convertableTileToChar: ConvertableToChar[Tile] = new ConvertableToChar[Tile] {
-    def toChar(t: Tile): Char = 'X'
+    def toChar(t: Tile): Char = 'A'
   }
 }
 
@@ -75,20 +76,30 @@ class TextBuffer[A: ConvertableToChar: ClassTag](tileset: TileSet, width: Int, h
     buff(idx(x, y)) = char
 
   def drawIntoBuffer(buffer: Graphics2D): Unit = {
+    val (pixWidth, pixHeight) = tileset.convertCoords(width, height)
+
+    buffer.setColor(Color.black)
+    buffer.fillRect(0, 0, pixWidth, pixHeight)
+
     for ((x, y) <- iterate) {
       tileset.drawCharToBuff(buffer, this(x, y).toChar, x, y)
     }
   }
 
-  val iterate: Iterator[(Int, Int)] = for {
+  def iterate: Iterator[(Int, Int)] = for {
     x <- (0 until width).toIterator
-    y <- 0 until width
+    y <- 0 until height
   } yield (x, y)
 
   def fill(tile: A): Unit = {
     for ((x, y) <- iterate) {
       this(x, y) = tile
     }
+  }
+
+  def pixDimension: Dimension = {
+    val (pixWidth, pixHeight) = tileset.convertCoords(width, height)
+    new Dimension(pixWidth, pixHeight)
   }
 
 }
@@ -102,35 +113,26 @@ object Context {
 class ImagePanel extends Panel {
   override def paintComponent(g: Graphics2D): Unit = {
     import Context._
-    g.setBackground(Color.black)
-    g.setColor(Color.blue)
-    g.fillRect(0, 0, 100, 100)
-
     textBuffer.drawIntoBuffer(g)
-    println(s"g = 1$g")
   }
 }
 
 trait MainWindow extends SimpleSwingApplication {
   def top : MainFrame = new MainFrame {
     title = "hello, world!"
-    bounds = new Rectangle(100, 100, 100, 100)
 
-    val label: Label = new Label {
-      text = "hello, world!"
-    }
 
-    contents = new ImagePanel { //(Orientation.Horizontal) {
-      //contents = "123"//label
+    contents = new ImagePanel {
+      maximumSize = Context.textBuffer.pixDimension
+      preferredSize = maximumSize
 
-//      listenTo(keys)
-//      reactions += {
-//        case key:KeyPressed =>
-//          println(key.key)
-//          //label.text = key.key.toString
-//      }
-//      focusable = true
-//      requestFocus()
+      listenTo(keys)
+      reactions += {
+        case key:KeyPressed =>
+          println(key.key)
+      }
+      focusable = true
+      requestFocus()
     }
   }
 }
