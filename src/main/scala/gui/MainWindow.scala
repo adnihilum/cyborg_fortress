@@ -25,9 +25,9 @@ trait MainWindow extends SimpleSwingApplication {
               textBuffer.deltaMove(0, -1)
             case Key.Down =>
               textBuffer.deltaMove(0, 1)
+            case _ =>
           }
 
-          //println(key.key)
           repaint()
       }
       focusable = true

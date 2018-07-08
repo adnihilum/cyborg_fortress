@@ -9,6 +9,11 @@ import scala.swing.Graphics2D
 
 class TileSet(path: String, charWidth: Int, charHeight: Int) {
   private val image = ImageIO.read(new File(path))
+  val charImages: Array[BufferedImage] = Array.ofDim(16 * 16)
+
+  for(c <- 0 until 256) {
+    charImages(c) = charToImage(c.toChar)
+  }
 
   def convertCoords(x: Int, y: Int): (Int, Int) = {
     (x * charWidth, y * charHeight)
@@ -22,7 +27,7 @@ class TileSet(path: String, charWidth: Int, charHeight: Int) {
 
   def drawCharToBuff(buffer: Graphics2D, char: Char, charX: Int, charY: Int): Unit = {
     val (x, y) = convertCoords(charX, charY)
-    val charImage = charToImage(char)
+    val charImage = charImages(char)
     val transform = buffer.getTransform
     transform.translate(x, y)
     buffer.drawRenderedImage(charImage, transform)
