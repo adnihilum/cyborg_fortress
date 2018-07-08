@@ -1,21 +1,19 @@
 package main
 
 trait Plane2d {
-  val width: Int
-  val height: Int
+  val dim: Dim
 
-  def iterate: Iterator[(Int, Int)] = for {
-    x <- (0 until width).toIterator
-    y <- 0 until height
-  } yield (x, y)
+  def iterate: Iterator[Point] = for {
+    x <- (0 until dim.width).toIterator
+    y <- 0 until dim.height
+  } yield Point(x, y)
 
-  def idx(x: Int, y: Int): Int = {
-    if(!inBound(x, y))
+  def idx(p: Point): Int = {
+    if(!inBound(p))
       throw new IndexOutOfBoundsException()
-    x + y * width
+    p.x + p.y * dim.width
   }
 
-  def inBound(x: Int, y: Int): Boolean =
-    x >= 0 && x < width && y >= 0 && y < height
-
+  def inBound(p: Point): Boolean =
+    p.x >= 0 && p.x < dim.width && p.y >= 0 && p.y < dim.height
 }

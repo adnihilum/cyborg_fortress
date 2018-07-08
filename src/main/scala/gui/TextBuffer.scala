@@ -4,41 +4,42 @@ import java.awt.{Color, Dimension}
 import scala.reflect.ClassTag
 import scala.swing.Graphics2D
 import gui.ConvertableToCharOps._
-import main.SpaceLike
+import main.{Dim, Point, SpaceLike}
 
 class TextBuffer[A: ConvertableToChar: ClassTag]
 ( tileset: TileSet,
   space: SpaceLike,
-  private var curX: Int,
-  private var curY: Int,
-  val width: Int,
-  val height: Int
+  private var curPoint: Point,
+  val dim: Dim
 ) extends main.Plane2d {
 
-  def move(newX: Int, newY: Int): Unit = {
-    curX = newX
-    curY = newY
+  def move(newPoint: Point): Unit = {
+    curPoint = newPoint
   }
 
-  def deltaMove(dx: Int, dy: Int): Unit = {
-    curX += dx
-    curY += dy
+  def deltaMove(dx: Int, dy: Int): Unit =
+    deltaMove(Point(dx, dy))
+
+  def deltaMove(dp: Point): Unit = {
+    curPoint = curPoint + dp
   }
 
   def drawIntoBuffer(buffer: Graphics2D): Unit = {
-    val (pixWidth, pixHeight) = tileset.convertCoords(width, height)
+    val pixDim: Dim = tileset.convertCoords(dim).toDim
 
     buffer.setColor(Color.black)
-    buffer.fillRect(0, 0, pixWidth, pixHeight)
+    buffer.fillRect(0, 0, pixDim.width, pixDim.height)
 
-    val subSpace = space.getSubSpace(curX, curY, width, height)
-    for ((x, y) <- iterate) {
-      tileset.drawCharToBuff(buffer, subSpace(x, y).toChar, x, y)
+    val subSpace = space.getSubSpace(curPoint, dim)
+    for (p <- iterate) {
+      tileset.drawCharToBuff(buffer, subSpace(p).toChar, p)
     }
   }
 
   def pixDimension: Dimension = {
-    val (pixWidth, pixHeight) = tileset.convertCoords(width, height)
-    new Dimension(pixWidth, pixHeight)
+    import scala.language.implicitConversions
+
+    val pixDim = tileset.convertCoords(dim)
+    new Dimension(pixDim.width, pixDim.height)
   }
 }

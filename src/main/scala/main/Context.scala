@@ -6,14 +6,14 @@ import scala.util.Random
 
 object Context {
   val tileSet = new TileSet("/home/user/tmp/Bisasam_16x16.png", 16, 16)
-  val space = new Space(100, 100)
-  val textBuffer = new TextBuffer[Tile](tileSet, space, -2, -2, 40, 25)
+  val space = new Space(Dim(100, 100))
+  val textBuffer = new TextBuffer[Tile](tileSet, space, Point(-2, -2), Dim(40, 25))
 
   // populate space
   val rnd = new Random
-  for((x, y) <- space.iterate) {
+  for(p <- space.iterate) {
     if (rnd.nextFloat() > 0.8) {
-      space(x, y) = Tile.Wall
+      space(p) = Tile.Wall
     }
   }
 }

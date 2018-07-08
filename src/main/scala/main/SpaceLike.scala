@@ -1,54 +1,50 @@
 package main
 
 trait SpaceLike extends Plane2d {
-  def apply(x: Int, y: Int): Tile
-  def update(x: Int, y: Int, tile: Tile): Unit
+  def apply(p: Point): Tile
+  def update(p: Point, tile: Tile): Unit
 
-  def getSubSpace(x: Int, y: Int, width: Int, height: Int): SubSpace
+  def getSubSpace(p: Point, dim: Dim): SubSpace
 }
 
 class SubSpace(parent: SpaceLike,
-               val parentX: Int,
-               val parentY: Int,
-               val width: Int,
-               val height: Int
+               val parentPoint: Point,
+               val dim: Dim
               ) extends SpaceLike {
-  override def apply(x: Int, y: Int): Tile =
-    parent(parentX + x, parentY + y)
+  override def apply(p: Point): Tile =
+    parent(parentPoint + p)
 
-  override def update(x: Int, y: Int, tile: Tile): Unit = {
-    parent(parentX + x, parentY + y) = tile
+  override def update(p: Point, tile: Tile): Unit = {
+    parent(parentPoint + p) = tile
   }
 
-  def getSubSpace(x: Int, y: Int, subWidth: Int, subHeight: Int): SubSpace = {
-    new SubSpace(this, parentX + x, parentY + y, subWidth, subHeight)
+  def getSubSpace(p: Point, subDim: Dim): SubSpace = {
+    new SubSpace(this, parentPoint + p, subDim)
   }
 }
 
-class Space(val width: Int,
-            val height: Int
-           ) extends SpaceLike {
-  val tiles: Array[Tile] = Array.ofDim(width * height)
+class Space(val dim: Dim) extends SpaceLike {
+  val tiles: Array[Tile] = Array.ofDim(dim.width * dim.height)
   fill(Tile.Empty)
 
   def fill(tile: Tile): Unit = {
-    for ((x, y) <- iterate) {
-      tiles(idx(x, y)) = tile
+    for (p <- iterate) {
+      tiles(idx(p)) = tile
     }
   }
 
   // SpaceLike interface
-  override def apply(x: Int, y: Int): Tile = {
-    if (inBound(x, y))
-      tiles(idx(x, y))
+  override def apply(p: Point): Tile = {
+    if (inBound(p))
+      tiles(idx(p))
     else
       Tile.Nothing
   }
 
-  override def update(x: Int, y: Int, tile: Tile): Unit = {
-    tiles(idx(x, y)) = tile
+  override def update(p:Point, tile: Tile): Unit = {
+    tiles(idx(p)) = tile
   }
 
-  override def getSubSpace(x: Int, y: Int, subWidth: Int, subHeight: Int): SubSpace =
-    new SubSpace(this, x, y, subWidth, subHeight)
+  override def getSubSpace(p: Point, subDim: Dim): SubSpace =
+    new SubSpace(this, p, subDim)
 }

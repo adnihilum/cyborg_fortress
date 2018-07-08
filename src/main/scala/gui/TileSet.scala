@@ -2,9 +2,8 @@ package gui
 
 import java.awt.image.BufferedImage
 import java.io.File
-
 import javax.imageio.ImageIO
-
+import main.Point
 import scala.swing.Graphics2D
 
 class TileSet(path: String, charWidth: Int, charHeight: Int) {
@@ -15,21 +14,20 @@ class TileSet(path: String, charWidth: Int, charHeight: Int) {
     charImages(c) = charToImage(c.toChar)
   }
 
-  def convertCoords(x: Int, y: Int): (Int, Int) = {
-    (x * charWidth, y * charHeight)
-  }
+  def convertCoords(p: Point): Point =
+    Point(p.x * charWidth, p.y * charHeight)
 
   def charToImage(char: Char): BufferedImage = {
     val idx: Int = char.toInt
-    val (x, y) = convertCoords(idx % 16, idx / 16)
-    image.getSubimage(x, y, charWidth, charHeight)
+    val pixPoint = convertCoords(Point(idx % 16, idx / 16))
+    image.getSubimage(pixPoint.x, pixPoint.y, charWidth, charHeight)
   }
 
-  def drawCharToBuff(buffer: Graphics2D, char: Char, charX: Int, charY: Int): Unit = {
-    val (x, y) = convertCoords(charX, charY)
+  def drawCharToBuff(buffer: Graphics2D, char: Char, charPoint: Point): Unit = {
+    val pixPoint = convertCoords(charPoint)
     val charImage = charImages(char)
     val transform = buffer.getTransform
-    transform.translate(x, y)
+    transform.translate(pixPoint.x, pixPoint.y)
     buffer.drawRenderedImage(charImage, transform)
   }
 }
