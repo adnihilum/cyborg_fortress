@@ -39,7 +39,6 @@ class Space(val width: Int,
 
   // SpaceLike interface
   override def apply(x: Int, y: Int): Tile = {
-    println(s"x = $x, y = $y")
     if (inBound(x, y))
       tiles(idx(x, y))
     else

@@ -1,7 +1,7 @@
 package gui
 
 import scala.swing._
-import scala.swing.event.KeyPressed
+import scala.swing.event.{Key, KeyPressed}
 import scala.language.implicitConversions
 import main.Context._
 
@@ -16,7 +16,19 @@ trait MainWindow extends SimpleSwingApplication {
       listenTo(keys)
       reactions += {
         case key:KeyPressed =>
-          println(key.key)
+          key.key match {
+            case Key.Left =>
+              textBuffer.deltaMove(-1, 0)
+            case Key.Right =>
+              textBuffer.deltaMove(1, 0)
+            case Key.Up =>
+              textBuffer.deltaMove(0, -1)
+            case Key.Down =>
+              textBuffer.deltaMove(0, 1)
+          }
+
+          //println(key.key)
+          repaint()
       }
       focusable = true
       requestFocus()

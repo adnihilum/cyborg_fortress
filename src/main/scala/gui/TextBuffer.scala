@@ -20,6 +20,11 @@ class TextBuffer[A: ConvertableToChar: ClassTag]
     curY = newY
   }
 
+  def deltaMove(dx: Int, dy: Int): Unit = {
+    curX += dx
+    curY += dy
+  }
+
   def drawIntoBuffer(buffer: Graphics2D): Unit = {
     val (pixWidth, pixHeight) = tileset.convertCoords(width, height)
 
