@@ -1,5 +1,6 @@
 package gui
 
+import main.Context
 import scala.swing._
 import scala.swing.event.{Key, KeyPressed}
 import scala.language.implicitConversions
@@ -32,6 +33,10 @@ trait MainWindow extends SimpleSwingApplication {
       }
       focusable = true
       requestFocus()
+      def render(): Unit = {
+        repaint()
+      }
+      Context.simulation.start(render)
     }
   }
 }

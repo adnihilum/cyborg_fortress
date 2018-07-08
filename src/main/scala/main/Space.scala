@@ -1,7 +1,7 @@
 package main
 
 class Space(val dim: Dim) extends SpaceLike {
-  val tiles: Array[Tile] = Array.ofDim(dim.width * dim.height)
+  private val tiles: Array[Tile] = Array.ofDim(dim.width * dim.height)
   fill(Tile.Empty)
 
   def fill(tile: Tile): Unit = {
