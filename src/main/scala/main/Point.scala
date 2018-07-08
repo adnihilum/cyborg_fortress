@@ -13,10 +13,7 @@ case class Point(x: Int, y: Int) {
   def toDim: Dim = Dim(x, y)
 }
 
-case class Dim(width: Int, height: Int)
-
 object Point {
   implicit def pointToDim(p: Point): Dim = Dim(p.x, p.y)
   implicit def dimToPoint(d: Dim): Point = Point(d.width, d.height)
 }
-
