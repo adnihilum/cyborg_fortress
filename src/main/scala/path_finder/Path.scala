@@ -24,9 +24,8 @@ object Path {
   def find(space: Space, start:Point, goal:Point): Path = {
     var queue: mutable.SortedSet[PathPoint] =
       mutable.SortedSet.empty(Ordering.by[PathPoint, Double](_.score))
-    var traveled: Set[PathPoint] = Set()
 
-    queue += new PathPoint(start, 0, null)
+    queue += PathPoint(start, 0, null)
 
     def score(cur:Point): Double =
       pow(cur.x - goal.x, 2) + pow(cur.y - goal.y, 2)
@@ -39,7 +38,7 @@ object Path {
             dy: Int <- -1 to 1
             if !(dx == 0 && dy == 0)
             if space.isAccesable(x + dx, y + dy)
-          } yield (new Point(x + dx, y + dy)): Point
+          } yield Point(x + dx, y + dy)
         }
       }
     }
@@ -55,7 +54,7 @@ object Path {
         for{
           neighbor <- neighbors(cur.pos)
         } {
-          val nextPPoint = new PathPoint(neighbor, steps + score(neighbor), cur)
+          val nextPPoint = PathPoint(neighbor, steps + score(neighbor), cur)
           queue += nextPPoint
         }
         iter(steps + 1)

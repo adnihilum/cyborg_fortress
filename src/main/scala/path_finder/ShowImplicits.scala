@@ -4,7 +4,6 @@ import cats._
 import cats.implicits._
 
 object ShowImplicits {
-
   // for Space
   implicit val spaceShow: Show[Space] = Show.show[Space]((x:Space) => {
     val y:GenSpace[Cell] = x
@@ -34,32 +33,31 @@ object ShowImplicits {
     })
 
   implicit val pathShow: Show[Path] =
-    Show.show[Path] {case Path(space, points) => {
-      val printSpace = GenSpace[String](space.width, space.height, ".")
+    Show.show[Path] {
+      case Path(space, points) =>
+        val printSpace = GenSpace[String](space.width, space.height, ".")
 
-      // print space itself
-      for{
-        x <- 0 until space.width
-        y <- 0 until space.height
-      } yield {
-        printSpace(x, y) = space(x,y).show
-      }
-
-      // print points of the path
-      def getChar(idx:Int) = {
-        val chars = ('0' to '9') ++ ('a' to 'z')
-        chars(idx % chars.length)
-      }
-
-      for{(p, idx) <- points.zipWithIndex}yield{
-        printSpace(p.x, p.y) = {
-          if (idx == 0) "S" // this is the start point
-          else if(idx == points.length - 1) "E" //this is the end
-          else getChar(idx).toString
+        // print space itself
+        for {
+          x <- 0 until space.width
+          y <- 0 until space.height
+        } yield {
+          printSpace(x, y) = space(x, y).show
         }
-      }
 
-      printSpace.show
-  }}
+        // print points of the path
+        def getChar(idx: Int) = {
+          val chars = ('0' to '9') ++ ('a' to 'z')
+          chars(idx % chars.length)
+        }
 
+        for {(p, idx) <- points.zipWithIndex} yield {
+          printSpace(p.x, p.y) = {
+            if (idx == 0) "S" // this is the start point
+            else if (idx == points.length - 1) "E" //this is the end
+            else getChar(idx).toString
+          }
+        }
+        printSpace.show
+    }
 }
