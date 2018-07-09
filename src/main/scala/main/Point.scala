@@ -1,5 +1,7 @@
 package main
 
+import scala.language.implicitConversions
+
 case class Point(x: Int, y: Int) {
   def + (that: Point): Point =
     Point(this.x + that.x, this.y + that.y)
