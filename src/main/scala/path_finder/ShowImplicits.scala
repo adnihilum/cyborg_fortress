@@ -34,7 +34,7 @@ object ShowImplicits {
   implicit val pathShow: Show[Path] =
     Show.show[Path] {
       case Path(space, points) =>
-        val printSpace = GenSpace[String](space.dim, ".")
+        val printSpace = GenSpacePersist[String](space.dim, ".")
 
         // print space itself
         for (p <- space.iterate)

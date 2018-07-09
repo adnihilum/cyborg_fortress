@@ -2,14 +2,35 @@ package path_finder
 import cats._
 import cats.implicits._
 import EqImplicits._
-import main.{Dim, Point}
+import main.{Dim, Point, SpaceLike}
 
-case class WalkSpace(override val dim: Dim)
-  extends GenSpace[Cell](dim) {
-
+trait WalkSpace extends GenSpace[Cell] {
   def isAccesable(p: Point): Boolean =
     inBound(p) && this(p) === CellEmpty
-
-  for(p <- iterate) this(p) = CellEmpty
 }
 
+object WalkSpace {
+  def fromOtherSpace[T](space: GenSpace[T], predCanWalk: T => Boolean): WalkSpace = {
+    new WalkSpace {
+      val dim = space.dim
+
+      def apply(p: Point): Cell = {
+        if( predCanWalk(space(p)) ) CellFull
+        else CellEmpty
+      }
+
+      def update(p: Point, cell: Cell): Unit = ()
+    }
+  }
+
+  def persist(initDim: Dim): WalkSpace = {
+    new WalkSpace {
+      val dim: Dim = initDim
+      val space = GenSpacePersist[Cell](dim, CellEmpty)
+      def apply(p: Point): Cell = space(p)
+      def update(p: Point, c: Cell): Unit = {
+        space(p) = c
+      }
+    }
+  }
+}

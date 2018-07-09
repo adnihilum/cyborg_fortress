@@ -6,7 +6,7 @@ import ShowImplicits._
 import main.{Dim, Point}
 
 object Main extends App {
-  val space = WalkSpace(Dim(10, 10))
+  val space = WalkSpace.persist(Dim(10, 10))
 
   for{
     x <- 2 to 3
