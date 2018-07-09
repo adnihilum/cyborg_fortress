@@ -1,9 +1,9 @@
 package main
 
-class SubSpace(parent: SpaceLike,
+class SubSpace(parent: SpaceLike[Tile],
                val parentPoint: Point,
                val dim: Dim
-              ) extends SpaceLike {
+              ) extends SpaceLike[Tile] {
   override def apply(p: Point): Tile =
     parent(parentPoint + p)
 

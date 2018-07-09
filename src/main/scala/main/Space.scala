@@ -1,6 +1,6 @@
 package main
 
-class Space(val dim: Dim) extends SpaceLike {
+class Space(val dim: Dim) extends SpaceLike[Tile] {
   private val tiles: Array[Tile] = Array.ofDim(dim.width * dim.height)
   fill(Tile.Empty)
 

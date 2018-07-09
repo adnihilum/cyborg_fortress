@@ -3,10 +3,12 @@ package main
 trait Plane2d {
   val dim: Dim
 
-  def iterate: Iterator[Point] = for {
-    x <- (0 until dim.width).toIterator
-    y <- 0 until dim.height
-  } yield Point(x, y)
+  def iterate: Iterator[Point] = {
+    for {
+      x <- (0 until dim.width).toIterator
+      y <- 0 until dim.height
+    } yield Point(x, y)
+  }
 
   def idx(p: Point): Int = {
     if(!inBound(p))

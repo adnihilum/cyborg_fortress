@@ -1,14 +1,15 @@
 package gui
 
 import java.awt.{Color, Dimension}
+
 import scala.reflect.ClassTag
 import scala.swing.Graphics2D
 import gui.ConvertableToCharOps._
-import main.{Dim, Point, SpaceLike}
+import main.{Dim, Point, SpaceLike, Tile}
 
 class TextBuffer[A: ConvertableToChar: ClassTag]
 ( tileset: TileSet,
-  space: SpaceLike,
+  space: SpaceLike[Tile],
   private var curPoint: Point,
   val dim: Dim
 ) extends main.Plane2d {

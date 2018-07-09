@@ -3,44 +3,42 @@ package path_finder
 import cats._
 import cats.implicits._
 import EqImplicits._
+import main.Point
+import scala.collection.SortedSet
+import scala.math.pow
+import scala.collection.mutable
 
-case class Path (space: Space, points: Seq[Point]) {
+case class Path (space: WalkSpace, points: Seq[Point]) {
   def valid(): Boolean = {
     val isBlocked =
       (for (point <- points) yield {
-        space.p(point) =!= CellEmpty
+        space(point) =!= CellEmpty
       }).fold(false)(_ || _)
     ! isBlocked
   }
 }
 
-import scala.collection.SortedSet
-import scala.math.pow
-import scala.collection.mutable
-
-case class PathPoint(pos: Point, score: Double, parent: PathPoint)
 
 object Path {
-  def find(space: Space, start:Point, goal:Point): Path = {
+  case class PathPoint(pos: Point, score: Double, parent: PathPoint)
+
+  def find(space: WalkSpace, start:Point, goal:Point): Path = {
     var queue: mutable.SortedSet[PathPoint] =
       mutable.SortedSet.empty(Ordering.by[PathPoint, Double](_.score))
 
     queue += PathPoint(start, 0, null)
 
-    def score(cur:Point): Double =
+    def score(cur: Point): Double =
       pow(cur.x - goal.x, 2) + pow(cur.y - goal.y, 2)
 
-    def neighbors(pos:Point): Seq[Point] = {
-      pos match {
-        case Point(x, y) => {
-          for {
-            dx: Int <- -1 to 1
-            dy: Int <- -1 to 1
-            if !(dx == 0 && dy == 0)
-            if space.isAccesable(x + dx, y + dy)
-          } yield Point(x + dx, y + dy)
-        }
-      }
+    def neighbors(p: Point): Seq[Point] = {
+      for {
+        dx: Int <- -1 to 1
+        dy: Int <- -1 to 1
+        if !(dx == 0 && dy == 0)
+        dp = Point(dx, dy)
+        if space.isAccesable(p + dp)
+      } yield p + dp
     }
 
     def iter(steps: Int): PathPoint = {
