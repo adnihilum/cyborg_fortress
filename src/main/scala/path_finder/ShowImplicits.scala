@@ -2,11 +2,11 @@ package path_finder
 
 import cats._
 import cats.implicits._
-import main.Point
+import main.{Point, SpaceLike}
 
 object ShowImplicits {
   implicit val spaceShow: Show[WalkSpace] = Show.show[WalkSpace]((x:WalkSpace) => {
-    val y:GenSpace[Cell] = x
+    val y: SpaceLike[Cell] = x
     y.show
   })
 
@@ -15,8 +15,8 @@ object ShowImplicits {
     case CellFull => "#"
   }
 
-  implicit def genSpaceShow[CellType: Show]: Show[GenSpace[CellType]] =
-    Show.show[GenSpace[CellType]] ((s:GenSpace[CellType]) => {
+  implicit def SpaceLikeShow[CellType: Show]: Show[SpaceLike[CellType]] =
+    Show.show[SpaceLike[CellType]] ((s:SpaceLike[CellType]) => {
       val prefix = s"space ${s.dim.width} x ${s.dim.height}\n"
       val body:String =
         (for{

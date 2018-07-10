@@ -1,17 +1,13 @@
 package main
 
-class SubSpace(parent: SpaceLike[Tile],
+class SubSpace[T](parent: SpaceLike[T],
                val parentPoint: Point,
                val dim: Dim
-              ) extends SpaceLike[Tile] {
-  override def apply(p: Point): Tile =
+              ) extends SpaceLike[T] {
+  override def apply(p: Point): T =
     parent(parentPoint + p)
 
-  override def update(p: Point, tile: Tile): Unit = {
+  override def update(p: Point, tile: T): Unit = {
     parent(parentPoint + p) = tile
-  }
-
-  def getSubSpace(p: Point, subDim: Dim): SubSpace = {
-    new SubSpace(this, parentPoint + p, subDim)
   }
 }

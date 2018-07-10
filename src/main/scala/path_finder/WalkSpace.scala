@@ -4,13 +4,13 @@ import cats.implicits._
 import EqImplicits._
 import main.{Dim, Point, SpaceLike}
 
-trait WalkSpace extends GenSpace[Cell] {
+trait WalkSpace extends SpaceLike[Cell] {
   def isAccesable(p: Point): Boolean =
     inBound(p) && this(p) === CellEmpty
 }
 
 object WalkSpace {
-  def fromOtherSpace[T](space: GenSpace[T], predCanWalk: T => Boolean): WalkSpace = {
+  def fromOtherSpace[T](space: SpaceLike[T], predCanWalk: T => Boolean): WalkSpace = {
     new WalkSpace {
       val dim = space.dim
 

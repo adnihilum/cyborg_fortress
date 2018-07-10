@@ -22,6 +22,6 @@ class Space(val dim: Dim) extends SpaceLike[Tile] {
     tiles(idx(p)) = tile
   }
 
-  override def getSubSpace(p: Point, subDim: Dim): SubSpace =
+  override def getSubSpace(p: Point, subDim: Dim): SubSpace[Tile] =
     new SubSpace(this, p, subDim)
 }
