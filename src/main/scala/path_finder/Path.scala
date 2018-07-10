@@ -3,6 +3,7 @@ package path_finder
 import cats._
 import cats.implicits._
 import EqImplicits._
+import ShowImplicits._
 import common.Point
 
 import scala.collection.SortedSet
@@ -36,14 +37,14 @@ object Path {
       for {
         dx: Int <- -1 to 1
         dy: Int <- -1 to 1
-        if !(dx == 0 && dy == 0)
+        if !(dx == 0 && dy == 0) && (dx == 0 || dy == 0)
         dp = Point(dx, dy)
         if space.isAccesable(p + dp)
       } yield p + dp
     }
 
     def iter(steps: Int): PathPoint = {
-      if(queue.isEmpty) ???
+      if(queue.isEmpty) throw new Exception("there is no path")
 
       val cur = queue.head
       queue -= cur

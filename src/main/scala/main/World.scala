@@ -6,6 +6,7 @@ import scala.collection.mutable
 
 class World(val space: Space) {
   var creatures: mutable.Set[Creature] = mutable.Set()
+  implicit val innerWorld = this
 
   def spawnCreature (pos: Point, tile: Tile = main.Tile.Creature("default")): Unit = {
     if(space(pos) != Tile.Empty) throw new Exception("fail to spawn creature")
@@ -16,7 +17,7 @@ class World(val space: Space) {
 
   def step(): Unit = {
     for (creature <- creatures) {
-      val action = creature.step(this)
+      val action = creature.step
       if(isLegal(creature, action)) {
         implementAction(creature, action)
       }

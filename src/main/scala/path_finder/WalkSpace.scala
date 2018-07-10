@@ -15,8 +15,8 @@ object WalkSpace {
       val dim = space.dim
 
       def apply(p: Point): Cell = {
-        if( predCanWalk(space(p)) ) Cell.Full
-        else Cell.Empty
+        if( predCanWalk(space(p)) ) Cell.Empty
+        else Cell.Full
       }
 
       def update(p: Point, cell: Cell): Unit = ()

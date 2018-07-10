@@ -20,7 +20,7 @@ class Space(val dim: Dim) extends SpaceLike[Tile] {
       Tile.Nothing
   }
 
-  override def update(p:Point, tile: Tile): Unit = {
+  override def update(p: Point, tile: Tile): Unit = {
     tiles(idx(p)) = tile
   }
 

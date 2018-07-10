@@ -14,7 +14,7 @@ class Simulation(world: World) {
   }
 
   def sleep(): Unit = {
-    Thread.sleep(100)
+    Thread.sleep(100 * 10)
   }
 
   def step(): Unit = {
