@@ -2,8 +2,10 @@ package gui
 
 import java.awt.image.BufferedImage
 import java.io.File
+
+import common.Point
 import javax.imageio.ImageIO
-import main.Point
+
 import scala.swing.Graphics2D
 
 class TileSet(path: String, charWidth: Int, charHeight: Int) {

@@ -1,4 +1,4 @@
-package main
+package common
 
 class SubSpace[T](parent: SpaceLike[T],
                val parentPoint: Point,

@@ -2,7 +2,7 @@ package path_finder
 
 import cats._
 import cats.implicits._
-import main.{Point, SpaceLike}
+import common.{Point, SpaceLike}
 
 object ShowImplicits {
   implicit val spaceShow: Show[WalkSpace] = Show.show[WalkSpace]((x:WalkSpace) => {

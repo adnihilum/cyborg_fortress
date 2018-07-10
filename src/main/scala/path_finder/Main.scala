@@ -3,7 +3,7 @@ package path_finder
 import cats._
 import cats.implicits._
 import ShowImplicits._
-import main.{Dim, Point}
+import common.{Dim, Point}
 
 object Main extends App {
   val space = WalkSpace.persist(Dim(10, 10))

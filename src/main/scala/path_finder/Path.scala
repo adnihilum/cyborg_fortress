@@ -3,7 +3,8 @@ package path_finder
 import cats._
 import cats.implicits._
 import EqImplicits._
-import main.Point
+import common.Point
+
 import scala.collection.SortedSet
 import scala.math.pow
 import scala.collection.mutable

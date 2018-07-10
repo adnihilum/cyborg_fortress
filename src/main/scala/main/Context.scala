@@ -1,7 +1,9 @@
 package main
 
+import common.{Dim, Point}
 import gui.{TextBuffer, TileSet}
 import gui.ConvertableToCharOps._
+
 import scala.util.Random
 
 object Context {

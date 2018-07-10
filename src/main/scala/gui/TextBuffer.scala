@@ -2,17 +2,19 @@ package gui
 
 import java.awt.{Color, Dimension}
 
+import common.{Dim, Plane2d, Point, SpaceLike}
+
 import scala.reflect.ClassTag
 import scala.swing.Graphics2D
 import gui.ConvertableToCharOps._
-import main.{Dim, Point, SpaceLike, Tile}
+import main.Tile
 
 class TextBuffer[A: ConvertableToChar: ClassTag]
 ( tileset: TileSet,
   space: SpaceLike[Tile],
   private var curPoint: Point,
   val dim: Dim
-) extends main.Plane2d {
+) extends Plane2d {
 
   def move(newPoint: Point): Unit = {
     curPoint = newPoint

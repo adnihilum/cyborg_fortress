@@ -1,4 +1,4 @@
-package main
+package common
 
 trait SpaceLike[T] extends Plane2d {
   def apply(p: Point): T

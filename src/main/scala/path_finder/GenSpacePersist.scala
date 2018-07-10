@@ -1,6 +1,6 @@
 package path_finder
 
-import main.{Dim, Point, SpaceLike}
+import common.{Dim, Point, SpaceLike}
 
 import scala.reflect.ClassTag
 

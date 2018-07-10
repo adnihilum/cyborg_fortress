@@ -1,5 +1,7 @@
 package main
 
+import common.Point
+
 trait Action
 object Action {
   case object Up extends Action

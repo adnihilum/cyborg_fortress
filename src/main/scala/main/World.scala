@@ -1,5 +1,7 @@
 package main
 
+import common.Point
+
 import scala.collection.mutable
 
 class World(val space: Space) {

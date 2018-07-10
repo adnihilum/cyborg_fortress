@@ -2,7 +2,7 @@ package path_finder
 import cats._
 import cats.implicits._
 import EqImplicits._
-import main.{Dim, Point, SpaceLike}
+import common.{Dim, Point, SpaceLike}
 
 trait WalkSpace extends SpaceLike[Cell] {
   def isAccesable(p: Point): Boolean =
