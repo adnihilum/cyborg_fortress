@@ -11,8 +11,8 @@ object ShowImplicits {
   })
 
   implicit val cellShow: Show[Cell] = Show.show[Cell] {
-    case CellEmpty => "."
-    case CellFull => "#"
+    case Cell.Empty => "."
+    case Cell.Full => "#"
   }
 
   implicit def SpaceLikeShow[CellType: Show]: Show[SpaceLike[CellType]] =

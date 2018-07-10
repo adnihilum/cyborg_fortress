@@ -12,7 +12,7 @@ case class Path (space: WalkSpace, points: Seq[Point]) {
   def valid(): Boolean = {
     val isBlocked =
       (for (point <- points) yield {
-        space(point) =!= CellEmpty
+        space(point) =!= Cell.Empty
       }).fold(false)(_ || _)
     ! isBlocked
   }
