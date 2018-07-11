@@ -19,3 +19,7 @@ scalacOptions ++= Seq("-feature")
 
 // for swing
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.0.0-M2"
+
+// tests
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
