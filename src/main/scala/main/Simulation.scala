@@ -1,5 +1,7 @@
 package main
 
+import common.Profiling
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits._
 
@@ -11,8 +13,15 @@ class Simulation(world: World) {
     while(true) {
       curStep += 1
       //println(s"curStep = $curStep")
-      sleep()
-      step()
+      val (stepTime, _) =
+        Profiling.time {
+          step()
+        }
+      val delayFrame = 100 //ms
+      val delay =
+        if(stepTime > delayFrame) None
+        else Some(delayFrame - stepTime)
+      sleep(delay)
       render
     }
   } recover {
@@ -21,8 +30,10 @@ class Simulation(world: World) {
       //println(s"exception: ${exception}")
   }
 
-  def sleep(): Unit = {
-    Thread.sleep(100)
+  def sleep(delayOpt: Option[Int]): Unit = delayOpt match {
+    case None =>
+    case Some(delay) =>
+      Thread.sleep(delay)
   }
 
   def step(): Unit = {

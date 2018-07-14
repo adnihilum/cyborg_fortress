@@ -32,7 +32,7 @@ object Context {
     }
   }
 
-  for(_ <- 1 to 10) {
+  for(_ <- 1 to 100) {
     spawnCreatureLoop
   }
 }
