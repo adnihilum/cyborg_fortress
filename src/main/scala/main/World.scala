@@ -16,7 +16,7 @@ class World(val space: Space) {
   }
 
   def step(): Unit = {
-    for (creature <- creatures) {
+    for (creature <- creatures.par) {
       val action = creature.step
       if(isLegal(creature, action)) {
         implementAction(creature, action)

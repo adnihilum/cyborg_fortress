@@ -17,7 +17,7 @@ class Simulation(world: World) {
         Profiling.time {
           step()
         }
-      val delayFrame = 100 //ms
+      val delayFrame = 30 //ms
       val delay =
         if(stepTime > delayFrame) None
         else Some(delayFrame - stepTime)
