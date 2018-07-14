@@ -30,13 +30,26 @@ class TextBuffer[A: ConvertableToChar: ClassTag]
   def drawIntoBuffer(buffer: Graphics2D): Unit = {
     val pixDim: Dim = tileset.convertCoords(dim).toDim
 
-    buffer.setColor(Color.black)
-    buffer.fillRect(0, 0, pixDim.width, pixDim.height)
-
     val subSpace = space.getSubSpace(curPoint, dim)
     for (p <- iterate) {
       tileset.drawCharToBuff(buffer, subSpace(p).toChar, p)
     }
+
+    drawFPS(buffer: Graphics2D)
+  }
+
+  private var drawTimestamp: Long = timestamp
+  private def timestamp: Long = System.nanoTime
+
+  def drawFPS(buffer: Graphics2D): Unit = {
+    val newDrawTimestamp = timestamp
+    val deltaDrawTimestamp = newDrawTimestamp - drawTimestamp
+    val fps: Int = (1.0D / (deltaDrawTimestamp.toDouble / 1000.0D /1000.0D / 1000.0D)).toInt
+    val fpsString: String = fps.toString
+    val point: Point = Point(dim.width - fpsString.length, 0)
+    tileset.drawStringToBuff(buffer, fpsString, point)
+
+    drawTimestamp = newDrawTimestamp
   }
 
   def pixDimension: Dimension = {

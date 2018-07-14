@@ -1,5 +1,6 @@
 package gui
 
+import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.File
 
@@ -29,7 +30,23 @@ class TileSet(path: String, charWidth: Int, charHeight: Int) {
     val pixPoint = convertCoords(charPoint)
     val charImage = charImages(char)
     val transform = buffer.getTransform
+
+
+    buffer.setColor(Color.black)
+    buffer.fillRect(pixPoint.x, pixPoint.y, charWidth, charHeight)
+
     transform.translate(pixPoint.x, pixPoint.y)
     buffer.drawRenderedImage(charImage, transform)
+  }
+
+  def drawStringToBuff(buffer: Graphics2D, string: String, charPoint: Point): Unit = {
+    for {
+      (c, idx) <- string.zipWithIndex
+      x = charPoint.x + idx
+      y = charPoint.y
+      p = Point(x, y)
+    } {
+      drawCharToBuff(buffer, c, p)
+    }
   }
 }
