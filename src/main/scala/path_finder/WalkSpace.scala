@@ -23,16 +23,16 @@ trait WalkSpace extends SpaceLike[Cell] {
 }
 
 object WalkSpace {
-  def fromOtherSpace[T](space: SpaceLike[T], predCanWalk: T => Boolean): WalkSpace = {
+  def fromOtherSpace[T](space: SpaceLike[T], predCanWalk: (Point, T) => Boolean): WalkSpace = {
     new WalkSpace {
       val dim = space.dim
 
       def apply(p: Point): Cell = {
-        if( predCanWalk(space(p)) ) Cell.Empty
+        if( predCanWalk(p, space(p)) ) Cell.Empty
         else Cell.Full
       }
 
-      def update(p: Point, cell: Cell): Unit = ()
+      def update(p: Point, cell: Cell): Unit = throw new NotImplementedError()
     }
   }
 

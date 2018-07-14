@@ -25,12 +25,33 @@ object Path {
   case class PathPoint(pos: Point, score: Double, parent: PathPoint)
   implicit val orderingForPoint: Ordering[Point] = Ordering.by(p => (p.x, p.y))
 
-  def find(space: WalkSpace, start:Point, goal:Point): Path = {
+  def findP(space: WalkSpace, start: Point, goal: Point): Option[Path] = {
+    val (time, result) = common.Profiling.time(find(space, start, goal))
+    if(time > 600) {
+      println("slow path finding:")
+      result match {
+        case Some(path) => println(path.show)
+        case None => println((space, start, goal).show)
+      }
+      println(s"start: $start")
+      println(s"goal: $goal")
+      println(s"time: $time")
+    }
+    result
+  }
+
+  def find(space: WalkSpace, start: Point, goal: Point): Option[Path] = {
+    //println("find path")
+    //println(s"space: ${space.show}")
+    //println(s"start: $start")
+    //println(s"stop: $goal")
+
     var queue: mutable.SortedSet[PathPoint] =
       mutable.SortedSet.empty(Ordering.by(x => (x.score, x.pos)))
-    var visitedPoints: mutable.Set[Point] = mutable.Set()
+    var knownPoints: mutable.Set[Point] = mutable.Set()
 
     queue += PathPoint(start, 0, null)
+    knownPoints += start
 
     def score(cur: Point): Double =
       pow(cur.x - goal.x, 2) + pow(cur.y - goal.y, 2)
@@ -45,28 +66,25 @@ object Path {
       } yield p + dp
     }
 
-    def iter(steps: Int): PathPoint = {
-      if(queue.isEmpty) throw new Exception("there is no path")
-      //println(s"queue.length = ${queue.size}")
-      val cur = queue.head
-      //println(s"cur point: ${cur.pos}")
-
-      queue -= cur
-      visitedPoints += cur.pos
-
-      if(cur.pos === goal) cur
+    def iter(steps: Int): Option[PathPoint] = {
+      if(queue.isEmpty) None
       else {
-        for{
-          neighbor <- neighbors(cur.pos)
-        } {
-          val nextPPoint = PathPoint(neighbor, steps + score(neighbor), cur)
-          //println(s"nextPPoint = $nextPPoint")
-          if (!visitedPoints.contains(nextPPoint.pos))
-            queue += nextPPoint
-          //else
-            //println(s"visited that point")
+        val cur = queue.head
+
+        queue -= cur
+
+        if (cur.pos === goal) Some(cur)
+        else {
+          for {
+            neighbor <- neighbors(cur.pos)
+          } {
+            val nextPPoint = PathPoint(neighbor, steps + score(neighbor), cur)
+            if (!knownPoints.contains(nextPPoint.pos))
+              queue += nextPPoint
+              knownPoints += nextPPoint.pos
+          }
+          iter(steps + 1)
         }
-        iter(steps + 1)
       }
     }
 
@@ -76,8 +94,12 @@ object Path {
       else traceBack(cur.parent, nextAcc)
     }
 
-
-    val pathPoints = traceBack(iter(steps = 0), List())
-    new Path(space, pathPoints)
+    if (space.isAccesable(start) &&
+        space.isAccesable(goal) &&
+        start != goal
+    ) {
+        for (pathPoint <- iter(steps = 0)) yield
+          new Path(space, traceBack(pathPoint, List()))
+    } else None
   }
 }

@@ -8,7 +8,7 @@ import scala.util.Random
 
 object Context {
   val tileSet = new TileSet("/home/user/tmp/Bisasam_16x16.png", 16, 16)
-  val space = new Space(Dim(30, 30))
+  val space = new Space(Dim(20, 20))
   val textBuffer = new TextBuffer[Tile](tileSet, space, Point(-2, -2), Dim(40, 25))
   val world = new World(space)
   val simulation = new Simulation(world)
@@ -26,14 +26,13 @@ object Context {
     val x = rnd.nextInt(space.dim.width)
     val y = rnd.nextInt(space.dim.height)
     try world.spawnCreature(Point(x, y)) catch {
-      case e: Throwable => {
+      case e: Throwable =>
         println(s"exception: $e")
         spawnCreatureLoop
-      }
     }
   }
 
-  for(_ <- 1 to 1) {
+  for(_ <- 1 to 10) {
     spawnCreatureLoop
   }
 }

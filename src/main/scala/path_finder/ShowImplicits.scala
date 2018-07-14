@@ -55,4 +55,15 @@ object ShowImplicits {
         }
         printSpace.show
     }
+
+  implicit val spaceWithPointsShow: Show[(WalkSpace, Point, Point)] =
+    Show.show[(WalkSpace, Point, Point)] {
+      case (space, start, goal) =>
+        val printSpace = GenSpacePersist[String](space.dim, ".")
+        for (p <- space.iterate)
+          printSpace(p) = space(p).show
+        printSpace(start) = "S"
+        printSpace(goal) = "E"
+        printSpace.show
+    }
 }

@@ -52,11 +52,42 @@ class PathTest extends FlatSpec {
         |.......
       """.stripMargin
     val (space, start, end) = pathArgsFromString(7, 5, spaceString)
-    val path = Path.find(space, start, end)
+    val path = Path.find(space, start, end).get
 
     println(path.show)
     println(path.points(0))
     println(path.points(1))
 
+  }
+
+  it should "be empty when start and stop points are the same" in {
+    val spaceString =
+      """
+        |..#....
+        |.#.##..
+        |.S...#E
+        |.####..
+        |.......
+      """.stripMargin
+    val point = Point(0, 2)
+    val space = WalkSpace.fromString(Dim(7, 5), spaceString)
+    val path = Path.find(space, start = point, goal = point)
+    assert(path.isEmpty)
+  }
+
+  it should "not be found whe both start and goal points are not accessable" in {
+    val spaceString =
+      """
+        |.......
+        |.#.#...
+        |..#....
+        |.......
+        |.......
+      """.stripMargin
+    val start = Point(1, 1)
+    val goal = Point(3, 1)
+    val space = WalkSpace.fromString(Dim(7, 5), spaceString)
+    val path = Path.find(space, start, goal)
+    assert(path.isEmpty)
   }
 }
