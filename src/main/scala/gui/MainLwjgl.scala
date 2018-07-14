@@ -65,6 +65,7 @@ object MainLwjgl extends App {
 
     while (!glfwWindowShouldClose(window)) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+      render()
       glfwSwapBuffers(window)
       glfwPollEvents()
     }
@@ -78,6 +79,18 @@ object MainLwjgl extends App {
                          ): Unit = {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
       glfwSetWindowShouldClose(window, true)
+  }
+
+  private var sp: Float = .5f
+  private def render(): Unit = {
+    glColor3f(0.0f, 1.0f, 0.0f)
+    glBegin(GL_QUADS)
+    glVertex2f(-sp, -sp)
+    glVertex2f(sp, -sp)
+    glVertex2f(sp, sp)
+    glVertex2f(-sp, sp)
+    glEnd()
+
   }
 
   run()
