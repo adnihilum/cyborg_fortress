@@ -54,18 +54,17 @@ class Creature(var pos: Point, val tile: Tile)(implicit world: World) {
 
 
   def step: Action = {
+    //println("creature step")
     if(pos == goal){
       goal = getRandomGoal
-
     }
 
     val walkSpace = WalkSpace.fromOtherSpace(world.space, canWalk(pos))
-    walkSpace(pos) = Cell.Empty
 
     val walkSpaceTerrain = WalkSpace.fromOtherSpace(world.space, canWalkTerrain)
 
     import common.Profiling._
-    println(s"pos==goal => ${pos == goal} ")
+    //println(s"pos==goal => ${pos == goal} ")
     val pathOpt = Path.findP(walkSpace, pos, goal)
 
     val pathTerrainOpt = Path.findP(walkSpaceTerrain, pos, goal)
@@ -73,17 +72,17 @@ class Creature(var pos: Point, val tile: Tile)(implicit world: World) {
     (pathOpt, pathTerrainOpt) match {
       case (None, None) =>
         goal = getRandomGoal
-        println("case1")
+        //println("case1")
         Action.NoOp
 
       case (None, Some(_)) =>
-        println("case2")
+        //println("case2")
         Action.NoOp
 
       case (Some(path), _) =>
         val dp = path.points(1) - pos
-        println(s"pos: $pos\npaths first points: ${path.points.slice(0, 3)}")
-        println(s"path: ${path.show}")
+        //println(s"pos: $pos\npaths first points: ${path.points.slice(0, 3)}")
+        //println(s"path: ${path.show}")
 
         val action =
           dp match {

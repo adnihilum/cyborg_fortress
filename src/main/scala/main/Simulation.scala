@@ -10,15 +10,19 @@ class Simulation(world: World) {
   def start (render: => Unit): Future[Unit] = Future {
     while(true) {
       curStep += 1
-      println(s"curStep = $curStep")
+      //println(s"curStep = $curStep")
       sleep()
       step()
       render
     }
+  } recover {
+    case exception: Throwable =>
+      exception.printStackTrace()
+      //println(s"exception: ${exception}")
   }
 
   def sleep(): Unit = {
-    Thread.sleep(1000)
+    Thread.sleep(100)
   }
 
   def step(): Unit = {
