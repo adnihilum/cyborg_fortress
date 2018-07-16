@@ -1,5 +1,7 @@
 package gui
 
+import java.io.File
+
 import org.lwjgl._
 import org.lwjgl.glfw.Callbacks._
 import org.lwjgl.glfw.GLFW._
@@ -87,6 +89,13 @@ object MainLwjgl extends App {
   val heightTex: Int = next2powerValue(height)
   val heightTexD: Double = height.toDouble / heightTex.toDouble
 
+  import javax.imageio.ImageIO
+
+  val tilesetImage = ImageIO.read(new File("/home/user/tmp/Bisasam_16x16.png"))
+  val tilesetImageRendered = tilesetImage.getData()
+
+  //val tilesetPixels: Array[Float] = tilesetImageRendered.getPixels(0, 0, 16 * 16, 16 * 16, null)
+  val tilesetPixels: Array[Int] = tilesetImage.getRGB(0, 0, 256, 256, null, 0, 256)
   def initRender(): Unit = {
     GL.createCapabilities()
 
@@ -114,9 +123,10 @@ object MainLwjgl extends App {
       dIdx <- 0 until 3
       idx = absIdx + dIdx
     } {
-      pixels(idx) =
-        if((((x / 10).toInt % 2) + ((y / 10).toInt % 2)) % 2 == 0) 1.0f
-        else 0
+      pixels(idx) = 0
+//      pixels(idx) =
+//        if((((x / 10).toInt % 2) + ((y / 10).toInt % 2)) % 2 == 0) 1.0f
+//        else 0
     }
 
     glTexImage2D(
@@ -129,6 +139,17 @@ object MainLwjgl extends App {
       GL_RGB,
       GL_FLOAT,
       pixels)
+    val tilesetPixels2: Array[Float] =
+      for{
+        p <- tilesetPixels
+        subSample = {i:Int => ((p >> (i * 8)) & 255).toFloat / 256.0f}
+        idx <- 0 until 3
+      } yield {
+        subSample(idx) * subSample(3)
+      }
+    val tilesetPixels3: Array[Float] = tilesetPixels2.grouped(256 * 3).toList.reverse.flatten.toArray
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 256,
+      GL_RGB, GL_FLOAT, tilesetPixels3)
 
     glEnable(GL_TEXTURE_2D)
   }
