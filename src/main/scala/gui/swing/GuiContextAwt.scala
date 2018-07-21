@@ -1,11 +1,12 @@
-package gui
+package gui.swing
 
 import java.awt.image.BufferedImage
 
 import common.{Dim, Point}
+import gui.ConvertableToCharOps._
+import gui.TextBuffer
 import main.Context.space
 import main.Tile
-import gui.ConvertableToCharOps._
 
 import scala.swing.Graphics2D
 
