@@ -10,7 +10,7 @@ import gui.ConvertableToCharOps._
 import main.Tile
 
 class TextBuffer[A: ConvertableToChar: ClassTag]
-( tileset: TileSet,
+( tileset: TileSetAwt,
   space: SpaceLike[Tile],
   private var curPoint: Point,
   val dim: Dim

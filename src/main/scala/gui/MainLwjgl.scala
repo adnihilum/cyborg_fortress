@@ -190,17 +190,35 @@ object MainLwjgl extends App {
   }
 
   private def render(): Unit = {
-    glColor3f(0.0f, 0.0f, 0.0f)
-    glBegin(GL_QUADS)
-    glTexCoord2d(0, 0)
-    glVertex2d(0, 0)
-    glTexCoord2d(widthTexD, 0)
-    glVertex2f(width, 0)
-    glTexCoord2d(widthTexD, heightTexD)
-    glVertex2f(width, height)
-    glTexCoord2d(0, heightTexD)
-    glVertex2f(0, height)
-    glEnd()
+    def renderTexture() = {
+      glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        GL_RGBA8,
+        widthTex,
+        heightTex,
+        0,
+        GL_RGBA,
+        GL_UNSIGNED_BYTE,
+        texture.buffer)
+    }
+
+    def renderPoligon() = {
+      glColor3f(0.0f, 0.0f, 0.0f)
+      glBegin(GL_QUADS)
+      glTexCoord2d(0, 0)
+      glVertex2d(0, 0)
+      glTexCoord2d(widthTexD, 0)
+      glVertex2f(width, 0)
+      glTexCoord2d(widthTexD, heightTexD)
+      glVertex2f(width, height)
+      glTexCoord2d(0, heightTexD)
+      glVertex2f(0, height)
+      glEnd()
+    }
+
+    renderTexture()
+    renderPoligon()
   }
 
   run()

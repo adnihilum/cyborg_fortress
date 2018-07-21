@@ -1,13 +1,13 @@
 package main
 
 import common.{Dim, Point}
-import gui.{TextBuffer, TileSet}
+import gui.{TextBuffer, TileSet, TileSetAwt}
 import gui.ConvertableToCharOps._
 
 import scala.util.Random
 
 object Context {
-  val tileSet = new TileSet("/home/user/tmp/Bisasam_16x16.png", 16, 16)
+  val tileSet = new TileSetAwt("/home/user/tmp/Bisasam_16x16.png", 16, 16)
   val space = new Space(Dim(100, 100))
   val textBuffer = new TextBuffer[Tile](tileSet, space, Point(-2, -2), Dim(40, 25))
   val world = new World(space)
