@@ -1,8 +1,6 @@
 package benchmark
 
 import common.{Dim, Point}
-import gui.TextBuffer
-import main.Context.tileSet
 import main.{Simulation, Space, Tile, World}
 import path_finder.{Path, WalkSpace}
 import cats._
@@ -36,15 +34,15 @@ object PathFinding extends App {
         case _ => false
       }
 
-    def getRandomPoint(): Point =
+    def getRandomPoint: Point =
       Point(
         rnd.nextInt(dim.width),
         rnd.nextInt(dim.height)
       )
 
     val walkSpace = WalkSpace.fromOtherSpace(space, canWalk)
-    val start = getRandomPoint()
-    val goal = getRandomPoint()
+    val start = getRandomPoint
+    val goal = getRandomPoint
     val path = Path.findP(walkSpace, start, goal)
     //if(path.isDefined)println(path.get.show)
 

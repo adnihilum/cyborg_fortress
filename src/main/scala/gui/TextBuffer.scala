@@ -9,8 +9,8 @@ import scala.swing.Graphics2D
 import gui.ConvertableToCharOps._
 import main.Tile
 
-class TextBuffer[A: ConvertableToChar: ClassTag]
-( tileset: TileSetAwt,
+class TextBuffer[A: ConvertableToChar: ClassTag, ImageType: ClassTag, BufferType]
+( tileset: TileSet[ImageType, BufferType],
   space: SpaceLike[Tile],
   private var curPoint: Point,
   val dim: Dim
@@ -27,7 +27,7 @@ class TextBuffer[A: ConvertableToChar: ClassTag]
     curPoint = curPoint + dp
   }
 
-  def drawIntoBuffer(buffer: Graphics2D): Unit = {
+  def drawIntoBuffer(buffer: BufferType): Unit = {
     val pixDim: Dim = tileset.convertCoords(dim).toDim
 
     val subSpace = space.getSubSpace(curPoint, dim)
@@ -35,13 +35,13 @@ class TextBuffer[A: ConvertableToChar: ClassTag]
       tileset.drawCharToBuff(buffer, subSpace(p).toChar, p)
     }
 
-    drawFPS(buffer: Graphics2D)
+    drawFPS(buffer: BufferType)
   }
 
   private var drawTimestamp: Long = timestamp
   private def timestamp: Long = System.nanoTime
 
-  def drawFPS(buffer: Graphics2D): Unit = {
+  def drawFPS(buffer: BufferType): Unit = {
     val newDrawTimestamp = timestamp
     val deltaDrawTimestamp = newDrawTimestamp - drawTimestamp
     val fps: Int = (1.0D / (deltaDrawTimestamp.toDouble / 1000.0D /1000.0D / 1000.0D)).toInt

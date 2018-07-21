@@ -1,6 +1,6 @@
 package gui
 
-import main.Context._
+import gui.GuiContextAwt._
 import scala.swing.{Graphics2D, Panel}
 
 class ImagePanel extends Panel {

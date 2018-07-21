@@ -4,7 +4,7 @@ import main.Context
 import scala.swing._
 import scala.swing.event.{Key, KeyPressed}
 import scala.language.implicitConversions
-import main.Context._
+import gui.GuiContextAwt._
 
 trait MainWindow extends SimpleSwingApplication {
   def top: MainFrame = new MainFrame {
@@ -36,7 +36,7 @@ trait MainWindow extends SimpleSwingApplication {
       def render(): Unit = {
         repaint()
       }
-      Context.simulation.start(render)
+      Context.simulation.start(render _)
     }
   }
 }

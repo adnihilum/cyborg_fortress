@@ -1,15 +1,10 @@
 package main
 
 import common.{Dim, Point}
-import gui.{TextBuffer, TileSet, TileSetAwt}
-import gui.ConvertableToCharOps._
-
 import scala.util.Random
 
 object Context {
-  val tileSet = new TileSetAwt("/home/user/tmp/Bisasam_16x16.png", 16, 16)
   val space = new Space(Dim(100, 100))
-  val textBuffer = new TextBuffer[Tile](tileSet, space, Point(-2, -2), Dim(40, 25))
   val world = new World(space)
   val simulation = new Simulation(world)
   val rnd = new Random
@@ -22,17 +17,17 @@ object Context {
   }
 
   // spawn creatures
-  def spawnCreatureLoop: Unit = {
+  def spawnCreatureLoop(): Unit = {
     val x = rnd.nextInt(space.dim.width)
     val y = rnd.nextInt(space.dim.height)
     try world.spawnCreature(Point(x, y)) catch {
       case e: Throwable =>
         println(s"exception: $e")
-        spawnCreatureLoop
+        spawnCreatureLoop()
     }
   }
 
   for(_ <- 1 to 100) {
-    spawnCreatureLoop
+    spawnCreatureLoop()
   }
 }
