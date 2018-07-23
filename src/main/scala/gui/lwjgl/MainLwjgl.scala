@@ -6,6 +6,7 @@ import org.lwjgl.glfw._
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl._
 import org.lwjgl.system.MemoryUtil._
+import gui.lwjgl.GuiContextOpengl._
 
 
 object MainLwjgl extends App {
@@ -77,7 +78,7 @@ object MainLwjgl extends App {
       glfwSetWindowShouldClose(window, true)
   }
 
-  val texId: Int = 0
+  var texId: Int = 0
   private def next2powerValue(v: Int ): Int =
     1 << (math.log(v.toDouble) / math.log(2.0D)).ceil.toInt
 
@@ -86,8 +87,8 @@ object MainLwjgl extends App {
   val heightTex: Int = next2powerValue(height)
   val heightTexD: Double = height.toDouble / heightTex.toDouble
 
-  val tilesetImage = BufferedImage.fromFile("/home/user/tmp/Bisasam_16x16.png")
   val texture = BufferedImage.blank(widthTex, heightTex)
+
 
   def initRender(): Unit = {
     GL.createCapabilities()
@@ -100,7 +101,7 @@ object MainLwjgl extends App {
     glMatrixMode(GL_MODELVIEW)
 
     //init texture
-    val texId = glGenTextures()
+    texId = glGenTextures()
     glBindTexture(GL_TEXTURE_2D, texId)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
@@ -108,8 +109,7 @@ object MainLwjgl extends App {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
 
-    texture.paste(0, 0, tilesetImage)
-
+    //for(_ <- 0 until (255 + 130 + 1))
     glTexImage2D(
       GL_TEXTURE_2D,
       0,
@@ -124,21 +124,41 @@ object MainLwjgl extends App {
     glEnable(GL_TEXTURE_2D)
   }
 
+  var char: Char = 0
   private def render(): Unit = {
-    def renderTexture() = {
+    def renderTexture(): Unit = {
+      //textBuffer.drawIntoBuffer(texture)
+      //println("render")
+      val image = tileSet.charToImage(char)
+
+      char = ((char + 1) % 256).toChar
+      println(s"render: ${char.toInt}")
+      texture.paste(0,0, image)
+
+      glBindTexture(GL_TEXTURE_2D, texId)
       glTexImage2D(
         GL_TEXTURE_2D,
         0,
         GL_RGBA8,
-        widthTex,
-        heightTex,
+        texture.width,
+        texture.height,
         0,
         GL_RGBA,
         GL_UNSIGNED_BYTE,
         texture.buffer)
+//      glTexSubImage2D(
+//        GL_TEXTURE_2D,
+//        0,
+//        0,
+//        0,
+//        16,
+//        16,
+//        GL_RGBA,
+//        GL_UNSIGNED_BYTE,
+//        texture.buffer)
     }
 
-    def renderPoligon() = {
+    def renderPoligon(): Unit = {
       glColor3f(0.0f, 0.0f, 0.0f)
       glBegin(GL_QUADS)
       glTexCoord2d(0, 0)
