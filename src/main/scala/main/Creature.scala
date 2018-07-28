@@ -86,11 +86,10 @@ class Creature(var pos: Point, val tile: Tile)(implicit world: World) {
 
         val action =
           dp match {
-            case Point(0, 0) => {
+            case Point(0, 0) =>
               goal = getRandomGoal
               println("zero")
               Action.NoOp
-            }
             case Point(-1, 0) =>
               Action.Left
             case Point(1, 0) =>

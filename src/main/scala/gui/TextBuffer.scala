@@ -28,8 +28,6 @@ class TextBuffer[A: ConvertableToChar: ClassTag, ImageType: ClassTag, BufferType
   }
 
   def drawIntoBuffer(buffer: BufferType): Unit = {
-    val pixDim: Dim = tileset.convertCoords(dim).toDim
-
     val subSpace = space.getSubSpace(curPoint, dim)
     for (p <- iterate) {
       tileset.drawCharToBuff(buffer, subSpace(p).toChar, p)

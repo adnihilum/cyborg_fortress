@@ -6,7 +6,7 @@ import scala.collection.mutable
 
 class World(val space: Space) {
   var creatures: mutable.Set[Creature] = mutable.Set()
-  implicit val innerWorld = this
+  implicit val innerWorld: World = this
 
   def spawnCreature (pos: Point, tile: Tile = main.Tile.Creature("default")): Unit = {
     if(space(pos) != Tile.Empty) throw new Exception("fail to spawn creature")

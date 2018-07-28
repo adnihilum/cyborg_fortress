@@ -8,17 +8,15 @@ import org.lwjgl.glfw._
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl._
 import org.lwjgl.system.MemoryUtil._
-import gui.lwjgl.GuiContextOpengl._
 import main.{Context, Tile}
 import main.Context.space
 import gui.ConvertableToCharOps._
 
 object MainLwjgl extends App {
-
   private val width  = 800
   private val height = 600
 
-  var textBuffer: TextBuffer[Tile, Symbol, Unit] = null
+  var textBuffer: TextBuffer[Tile, Symbol, Unit] = _ // TODO:  fix that, there shouldn't be any var
 
   def run() {
     try {
@@ -34,8 +32,8 @@ object MainLwjgl extends App {
         renderMain(window)
       }.join()
 
-////      glfwFreeCallbacks(window)
-////      glfwDestroyWindow(window)
+      glfwFreeCallbacks(window)
+      glfwDestroyWindow(window)
     } finally {
       glfwTerminate() // destroys all remaining windows, cursors, etc...
       glfwSetErrorCallback(null).free()
@@ -102,25 +100,7 @@ object MainLwjgl extends App {
     glMatrixMode(GL_MODELVIEW)
   }
 
-  var char: Char = 0
   private def render(): Unit = {
-
-//    def renderPoligon(): Unit = {
-//      glColor3f(0.0f, 0.0f, 0.0f)
-//      glBegin(GL_QUADS)
-//      glTexCoord2d(0, 0)
-//      glVertex2d(0, 0)
-//      glTexCoord2d(widthTexD, 0)
-//      glVertex2f(width, 0)
-//      glTexCoord2d(widthTexD, heightTexD)
-//      glVertex2f(width, height)
-//      glTexCoord2d(0, heightTexD)
-//      glVertex2f(0, height)
-//      glEnd()
-//    }
-
-//    renderTileSet()
-//    renderPoligon()
     textBuffer.drawIntoBuffer(() )
   }
 

@@ -3,11 +3,8 @@ package gui.lwjgl
 import org.lwjgl.opengl.GL11._
 
 case class Symbol(textureId: Int, texX: Double, texY: Double, texWidth: Double, texHeight: Double) {
-  def render(x: Int, y: Int, width: Int, height: Int) = {
-    //println(s"printed symbol pos: ($x, $y) x ($texX, $texY) x ($texWidth, $texHeight)")
+  def render(x: Int, y: Int, width: Int, height: Int): Unit = {
     glEnable(GL_TEXTURE_2D)
-    //glDisable(GL_TEXTURE_2D)
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     glColor3f(0.0f, 0.0f, 0.0f)
 
     glBegin(GL_QUADS)

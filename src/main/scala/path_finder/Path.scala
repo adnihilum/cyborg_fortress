@@ -90,7 +90,7 @@ object Path {
 
     def traceBack(cur: PathPoint, acc: List[Point]): Seq[Point] = {
       val nextAcc = cur.pos :: acc
-      if (cur.pos === start) nextAcc.toSeq
+      if (cur.pos === start) nextAcc
       else traceBack(cur.parent, nextAcc)
     }
 

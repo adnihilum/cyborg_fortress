@@ -25,7 +25,7 @@ trait WalkSpace extends SpaceLike[Cell] {
 object WalkSpace {
   def fromOtherSpace[T](space: SpaceLike[T], predCanWalk: (Point, T) => Boolean): WalkSpace = {
     new WalkSpace {
-      val dim = space.dim
+      val dim: Dim = space.dim
 
       def apply(p: Point): Cell = {
         if( predCanWalk(p, space(p)) ) Cell.Empty
@@ -39,7 +39,7 @@ object WalkSpace {
   def persist(initDim: Dim): WalkSpace = {
     new WalkSpace {
       val dim: Dim = initDim
-      val space = GenSpacePersist[Cell](dim, Cell.Empty)
+      val space: SpaceLike[Cell] = GenSpacePersist[Cell](dim, Cell.Empty)
       def apply(p: Point): Cell = space(p)
       def update(p: Point, c: Cell): Unit = {
         space(p) = c
@@ -55,7 +55,7 @@ object WalkSpace {
       } yield Point(x, y)
 
     val chars: Set[Char] = ".#SE".toSet
-    val cleanStr = str.filter (chars.contains(_))
+    val cleanStr = str.filter (chars.contains)
     val space = persist(dim)
 
     for ((p, c) <- points.zip(cleanStr)) {

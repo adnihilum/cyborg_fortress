@@ -1,9 +1,6 @@
 package main
 
 import common.Profiling
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.util.{Failure, Try}
 
 
@@ -11,7 +8,7 @@ class Simulation(world: World) {
   var curStep = 0
 
   def start (render: => Unit): Thread = {
-    def loop = {
+    def loop(): Unit = {
       Try {
         while (true) {
           curStep += 1
@@ -31,11 +28,10 @@ class Simulation(world: World) {
       } match {
         case Failure(exception)=>
           exception.printStackTrace()
-        //println(s"exception: ${exception}")
         case _ =>
       }
     }
-    val thread = new Thread{loop}
+    val thread = new Thread{loop()}
     thread.start()
     thread
   }

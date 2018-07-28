@@ -2,13 +2,10 @@ package gui.lwjgl
 
 import common.Point
 import gui.TileSet
-import gui.lwjgl.MainLwjgl._
-
 import scala.reflect.ClassTag
 import org.lwjgl._
-import opengl._
 import opengl.GL11._
-import org.lwjgl.glfw._
+
 
 class TileSetOpengl(val path: String,
                     val charWidth: Int,
@@ -36,11 +33,8 @@ class TileSetOpengl(val path: String,
 
 
     val widthTex: Int = next2powerValue(textureImage.width)
-    //val widthTexD: Double = textureImage.width.toDouble / widthTex.toDouble
     val heightTex: Int = next2powerValue(textureImage.height)
-    //val heightTexD: Double = textureImage.height.toDouble / heightTex.toDouble
 
-    //for(_ <- 0 until (255 + 130 + 1))
     glTexImage2D(
       GL_TEXTURE_2D,
       0,
