@@ -4,30 +4,40 @@ import common.Profiling
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits._
+import scala.util.{Failure, Try}
 
 
 class Simulation(world: World) {
   var curStep = 0
 
-  def start (render: => Unit): Future[Unit] = Future {
-    while(true) {
-      curStep += 1
-      //println(s"curStep = $curStep")
-      val (stepTime, _) =
-        Profiling.time {
-          step()
+  def start (render: => Unit): Thread = {
+    def loop = {
+      Try {
+        while (true) {
+          curStep += 1
+          //println(s"curStep = $curStep")
+          val (stepTime, _) =
+            Profiling.time {
+              step()
+            }
+          val fpsLock: Double = 30
+          val delayFrame = ((1.0 / fpsLock) * 1000.0).toInt //ms
+          val delay =
+            if (stepTime > delayFrame) None
+            else Some(delayFrame - stepTime)
+          sleep(delay)
+          render
         }
-      val delayFrame = 30 //ms
-      val delay =
-        if(stepTime > delayFrame) None
-        else Some(delayFrame - stepTime)
-      sleep(delay)
-      render
+      } match {
+        case Failure(exception)=>
+          exception.printStackTrace()
+        //println(s"exception: ${exception}")
+        case _ =>
+      }
     }
-  } recover {
-    case exception: Throwable =>
-      exception.printStackTrace()
-      //println(s"exception: ${exception}")
+    val thread = new Thread{loop}
+    thread.start()
+    thread
   }
 
   def sleep(delayOpt: Option[Int]): Unit = delayOpt match {

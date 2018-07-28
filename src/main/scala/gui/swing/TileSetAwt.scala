@@ -15,7 +15,7 @@ class TileSetAwt(val path: String,
                  val charWidth: Int,
                  val charHeight: Int
                 )(implicit val imageClassTag: ClassTag[BufferedImage]) extends TileSet[BufferedImage, Graphics2D] {
-  override protected lazy val image = ImageIO.read(new File(path))
+  protected val image = ImageIO.read(new File(path))
 
   def charToImage(char: Char): BufferedImage = {
     val idx: Int = char.toInt

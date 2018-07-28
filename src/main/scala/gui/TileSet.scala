@@ -10,7 +10,6 @@ trait TileSet[ImageType, BufferType] {
   val charWidth: Int
   val charHeight: Int
 
-  protected lazy val image: ImageType = throw new UninitializedError
   val charImages: Array[ImageType] = Array.ofDim[ImageType](16 * 16)
 
   for(c <- 0 until 256) {

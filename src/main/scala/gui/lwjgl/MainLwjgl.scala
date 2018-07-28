@@ -1,5 +1,7 @@
 package gui.lwjgl
 
+import common.{Dim, Point}
+import gui.TextBuffer
 import org.lwjgl.glfw.Callbacks._
 import org.lwjgl.glfw.GLFW._
 import org.lwjgl.glfw._
@@ -7,22 +9,33 @@ import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl._
 import org.lwjgl.system.MemoryUtil._
 import gui.lwjgl.GuiContextOpengl._
-
+import main.{Context, Tile}
+import main.Context.space
+import gui.ConvertableToCharOps._
 
 object MainLwjgl extends App {
 
   private val width  = 800
   private val height = 600
 
+  var textBuffer: TextBuffer[Tile, Symbol, Unit] = null
+
   def run() {
     try {
       GLFWErrorCallback.createPrint(System.err).set()
 
       val window = init()
-      loop(window)
+      initRender()
 
-      glfwFreeCallbacks(window)
-      glfwDestroyWindow(window)
+      val tileSet = new TileSetOpengl("/home/user/tmp/Bisasam_16x16.png", 16, 16)
+      textBuffer = new TextBuffer[Tile, Symbol, Unit](tileSet, space, Point(-2, -2), Dim(40, 25))
+
+      Context.simulation.start {
+        renderMain(window)
+      }.join()
+
+////      glfwFreeCallbacks(window)
+////      glfwDestroyWindow(window)
     } finally {
       glfwTerminate() // destroys all remaining windows, cursors, etc...
       glfwSetErrorCallback(null).free()
@@ -58,14 +71,14 @@ object MainLwjgl extends App {
     window
   }
 
-  private def loop(window: Long) {
-    initRender()
-    while (!glfwWindowShouldClose(window)) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-      render()
-      glfwSwapBuffers(window)
-      glfwPollEvents()
-    }
+  private def renderMain(window: Long): Unit = {
+    if(glfwWindowShouldClose(window))
+      throw new Exception("widow was closed")
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    render()
+    glfwSwapBuffers(window)
+    glfwPollEvents()
   }
 
   private def keyHandler (window: Long,
@@ -78,18 +91,6 @@ object MainLwjgl extends App {
       glfwSetWindowShouldClose(window, true)
   }
 
-  var texId: Int = 0
-  private def next2powerValue(v: Int ): Int =
-    1 << (math.log(v.toDouble) / math.log(2.0D)).ceil.toInt
-
-  val widthTex: Int = next2powerValue(width)
-  val widthTexD: Double = width.toDouble / widthTex.toDouble
-  val heightTex: Int = next2powerValue(height)
-  val heightTexD: Double = height.toDouble / heightTex.toDouble
-
-  val texture = BufferedImage.blank(widthTex, heightTex)
-
-
   def initRender(): Unit = {
     GL.createCapabilities()
 
@@ -99,81 +100,28 @@ object MainLwjgl extends App {
     glMatrixMode(GL_PROJECTION)
     glOrtho(0.0, width, 0.0, height, -width, height)
     glMatrixMode(GL_MODELVIEW)
-
-    //init texture
-    texId = glGenTextures()
-    glBindTexture(GL_TEXTURE_2D, texId)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
-
-    //for(_ <- 0 until (255 + 130 + 1))
-    glTexImage2D(
-      GL_TEXTURE_2D,
-      0,
-      GL_RGBA8,
-      widthTex,
-      heightTex,
-      0,
-      GL_RGBA,
-      GL_UNSIGNED_BYTE,
-      texture.buffer)
-
-    glEnable(GL_TEXTURE_2D)
   }
 
   var char: Char = 0
   private def render(): Unit = {
-    def renderTexture(): Unit = {
-      //textBuffer.drawIntoBuffer(texture)
-      //println("render")
-      val image = tileSet.charToImage(char)
 
-      char = ((char + 1) % 256).toChar
-      println(s"render: ${char.toInt}")
-      texture.paste(0,0, image)
+//    def renderPoligon(): Unit = {
+//      glColor3f(0.0f, 0.0f, 0.0f)
+//      glBegin(GL_QUADS)
+//      glTexCoord2d(0, 0)
+//      glVertex2d(0, 0)
+//      glTexCoord2d(widthTexD, 0)
+//      glVertex2f(width, 0)
+//      glTexCoord2d(widthTexD, heightTexD)
+//      glVertex2f(width, height)
+//      glTexCoord2d(0, heightTexD)
+//      glVertex2f(0, height)
+//      glEnd()
+//    }
 
-      glBindTexture(GL_TEXTURE_2D, texId)
-      glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGBA8,
-        texture.width,
-        texture.height,
-        0,
-        GL_RGBA,
-        GL_UNSIGNED_BYTE,
-        texture.buffer)
-//      glTexSubImage2D(
-//        GL_TEXTURE_2D,
-//        0,
-//        0,
-//        0,
-//        16,
-//        16,
-//        GL_RGBA,
-//        GL_UNSIGNED_BYTE,
-//        texture.buffer)
-    }
-
-    def renderPoligon(): Unit = {
-      glColor3f(0.0f, 0.0f, 0.0f)
-      glBegin(GL_QUADS)
-      glTexCoord2d(0, 0)
-      glVertex2d(0, 0)
-      glTexCoord2d(widthTexD, 0)
-      glVertex2f(width, 0)
-      glTexCoord2d(widthTexD, heightTexD)
-      glVertex2f(width, height)
-      glTexCoord2d(0, heightTexD)
-      glVertex2f(0, height)
-      glEnd()
-    }
-
-    renderTexture()
-    renderPoligon()
+//    renderTileSet()
+//    renderPoligon()
+    textBuffer.drawIntoBuffer(() )
   }
 
   run()
