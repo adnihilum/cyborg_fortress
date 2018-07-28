@@ -1,7 +1,6 @@
 package path_finder
 
 import common.{Dim, Point, SpaceLike}
-
 import scala.reflect.ClassTag
 
 class GenSpacePersist[CellType: ClassTag](val dim: Dim) extends SpaceLike[CellType]

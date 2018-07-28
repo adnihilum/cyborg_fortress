@@ -1,11 +1,8 @@
 package gui
 
-import java.awt.{Color, Dimension}
-
+import java.awt.Dimension
 import common.{Dim, Plane2d, Point, SpaceLike}
-
 import scala.reflect.ClassTag
-import scala.swing.Graphics2D
 import gui.ConvertableToCharOps._
 import main.Tile
 

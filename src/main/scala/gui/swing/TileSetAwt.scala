@@ -3,11 +3,9 @@ package gui.swing
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.File
-
 import common.Point
 import gui.TileSet
 import javax.imageio.ImageIO
-
 import scala.reflect.ClassTag
 import scala.swing.Graphics2D
 

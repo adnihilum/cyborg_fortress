@@ -2,7 +2,6 @@ package gui.swing
 
 import GuiContextAwt._
 import main.Context
-
 import scala.language.implicitConversions
 import scala.swing._
 import scala.swing.event.{Key, KeyPressed}

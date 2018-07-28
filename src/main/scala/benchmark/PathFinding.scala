@@ -1,11 +1,8 @@
 package benchmark
 
 import common.{Dim, Point}
-import main.{Simulation, Space, Tile, World}
+import main.{Space, Tile}
 import path_finder.{Path, WalkSpace}
-import cats._
-import cats.implicits._
-import path_finder.ShowImplicits._
 
 import scala.util.Random
 

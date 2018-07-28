@@ -5,8 +5,6 @@ import cats.implicits._
 import EqImplicits._
 import ShowImplicits._
 import common.Point
-
-import scala.collection.SortedSet
 import scala.math.pow
 import scala.collection.mutable
 

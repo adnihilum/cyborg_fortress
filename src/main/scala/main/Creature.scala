@@ -1,10 +1,7 @@
 package main
 
 import common.Point
-import path_finder.{Cell, Path, WalkSpace}
-import cats._
-import cats.implicits._
-import path_finder.ShowImplicits._
+import path_finder.{Path, WalkSpace}
 
 import scala.util.Random
 
@@ -63,7 +60,6 @@ class Creature(var pos: Point, val tile: Tile)(implicit world: World) {
 
     val walkSpaceTerrain = WalkSpace.fromOtherSpace(world.space, canWalkTerrain)
 
-    import common.Profiling._
     //println(s"pos==goal => ${pos == goal} ")
     val pathOpt = Path.findP(walkSpace, pos, goal)
 

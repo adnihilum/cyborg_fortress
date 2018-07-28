@@ -1,7 +1,6 @@
 package gui.swing
 
 import java.awt.image.BufferedImage
-
 import common.{Dim, Point}
 import gui.ConvertableToCharOps._
 import gui.TextBuffer
