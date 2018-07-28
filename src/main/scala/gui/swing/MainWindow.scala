@@ -34,9 +34,7 @@ trait MainWindow extends SimpleSwingApplication {
       focusable = true
       requestFocus()
 
-      Context.simulation.start {
-        repaint()
-      }
+      Context.simulation.start (repaint _)
     }
   }
 }

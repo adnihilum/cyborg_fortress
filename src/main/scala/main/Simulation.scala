@@ -7,7 +7,7 @@ import scala.util.{Failure, Try}
 class Simulation(world: World) {
   var curStep = 0
 
-  def start (render: => Unit): Thread = {
+  def start (render: () => Unit): Thread = {
     def loop(): Unit = {
       Try {
         while (true) {
@@ -18,12 +18,12 @@ class Simulation(world: World) {
               step()
             }
           val fpsLock: Double = 30
-          val delayFrame = ((1.0 / fpsLock) * 1000.0).toInt //ms
+          val delayFrame = ((1.0 / fpsLock) * 1000.0).toInt
           val delay =
             if (stepTime > delayFrame) None
             else Some(delayFrame - stepTime)
           sleep(delay)
-          render
+          render()
         }
       } match {
         case Failure(exception)=>

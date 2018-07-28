@@ -11,25 +11,25 @@ import org.lwjgl.system.MemoryUtil._
 import main.{Context, Tile}
 import main.Context.space
 import gui.ConvertableToCharOps._
+import common.DimOps._
 
 object MainLwjgl extends App {
-  private val width  = 800
-  private val height = 600
+  val textDim: Dim = Dim(40, 25)
+  val dim: Dim = textDim * 16
 
-  var textBuffer: TextBuffer[Tile, Symbol, Unit] = _ // TODO:  fix that, there shouldn't be any var
+  type TextBufferOpengl = TextBuffer[Tile, Symbol, Unit]
 
-  def run() {
+  def run(): Unit = {
     try {
       GLFWErrorCallback.createPrint(System.err).set()
 
       val window = init()
       initRender()
-
       val tileSet = new TileSetOpengl("/home/user/tmp/Bisasam_16x16.png", 16, 16)
-      textBuffer = new TextBuffer[Tile, Symbol, Unit](tileSet, space, Point(-2, -2), Dim(40, 25))
+      val textBuffer = new TextBuffer[Tile, Symbol, Unit](tileSet, space, Point(-2, -2), textDim)
 
-      Context.simulation.start {
-        renderMain(window)
+      Context.simulation.start { () =>
+        renderMain(window, textBuffer)
       }.join()
 
       glfwFreeCallbacks(window)
@@ -48,19 +48,11 @@ object MainLwjgl extends App {
     glfwWindowHint(GLFW_VISIBLE,   GLFW_FALSE) // hiding the window
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE) // window resizing not allowed
 
-    val window = glfwCreateWindow(width, height, "LWJGL in Scala", NULL, NULL)
+    val window = glfwCreateWindow(dim.width, dim.height, "LWJGL in Scala", NULL, NULL)
     if (window == NULL)
       throw new RuntimeException("Failed to create the GLFW window")
 
     glfwSetKeyCallback(window, keyHandler _)
-
-    val vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor())
-
-    glfwSetWindowPos (
-      window,
-      (vidMode. width() -  width) / 2,
-      (vidMode.height() - height) / 2
-    )
 
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
@@ -69,12 +61,13 @@ object MainLwjgl extends App {
     window
   }
 
-  private def renderMain(window: Long): Unit = {
+  private def renderMain(window: Long, textBuffer: TextBufferOpengl): Unit = {
     if(glfwWindowShouldClose(window))
       throw new Exception("widow was closed")
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    render()
+
+    textBuffer.drawIntoBuffer(())
+
     glfwSwapBuffers(window)
     glfwPollEvents()
   }
@@ -91,17 +84,12 @@ object MainLwjgl extends App {
 
   def initRender(): Unit = {
     GL.createCapabilities()
-
     glClearColor(0f, 0f, 0f, 0f)
 
     // init projection
     glMatrixMode(GL_PROJECTION)
-    glOrtho(0.0, width, 0.0, height, -width, height)
+    glOrtho(0.0, dim.width, 0.0, dim.height, -dim.width, dim.height)
     glMatrixMode(GL_MODELVIEW)
-  }
-
-  private def render(): Unit = {
-    textBuffer.drawIntoBuffer(() )
   }
 
   run()
