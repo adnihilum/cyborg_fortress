@@ -15,6 +15,8 @@ object ConvertableToCharOps {
         case Tile.Empty => 176
         case _: Tile.Creature => 1
         case Tile.Wall => '#'
+        case Tile.Walker=> 'W'
+        case Tile.Zombi => 'Z'
       }
     }
   }
